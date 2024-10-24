@@ -1,0 +1,37 @@
+log:
+  level: DEBUG
+server:
+  port: 8902
+  servlet:
+    context-path:
+spring:
+  application:
+    ## 指定服务名称，在nacos中的名字
+    name: leaf
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        # 手动注册
+        enabled: false
+        server-addr: 127.0.0.1:8848
+        namespace: 81f27f96-a653-4919-b05c-6ed1cc6ace09
+        group: LEAF_GROUP
+        username: "nacos"
+        password: "nacos"
+      config:
+        enabled: false
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+        namespace: 81f27f96-a653-4919-b05c-6ed1cc6ace09
+        group: LEAF_GROUP
+        username: "nacos"
+        password: "nacos"
+logging:
+  config: classpath:logback-spring.xml
+management:
+  endpoints:
+    web:
+      exposure: ## yml文件中存在特殊字符，必须用单引号包含，否则启动报错
+        include: '*'
