@@ -5,7 +5,8 @@ import lyzzcw.work.component.redis.semaphore.DistributedSemaphore;
 import lyzzcw.work.component.redis.semaphore.factory.DistributedSemaphoreFactory;
 import lyzzcw.work.leaf.core.IDGen;
 import lyzzcw.work.leaf.core.common.Result;
-import lyzzcw.work.leaf.core.snowflake.SnowflakeIDGenImpl;
+import lyzzcw.work.leaf.core.snowflake.CustomizeSnowflakeIDGenImpl;
+import lyzzcw.work.leaf.core.snowflake.GeneralSnowflakeIDGenImpl;
 import lyzzcw.work.leaf.server.exception.InitException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -46,7 +47,16 @@ public class SnowflakeService {
                 String nacosAddr = environment.getProperty("spring.cloud.nacos.discovery.server-addr")
                         .concat("?namespace=")
                         .concat(environment.getProperty("spring.cloud.nacos.discovery.namespace"));
-                idGen = new SnowflakeIDGenImpl(nacosAddr,username,password,serverName,groupName, serverPort);
+                String type = environment.getProperty("snowflake.type", "general");
+                if(type.equals("general")){
+                    idGen = new GeneralSnowflakeIDGenImpl(nacosAddr,username,password,serverName,groupName, serverPort);
+                    log.info("General Snowflake IDGen Init Successfully");
+                }else if(type.equals("customize")){
+                    idGen = new CustomizeSnowflakeIDGenImpl(nacosAddr,username,password,serverName,groupName, serverPort);
+                    log.info("Customize Snowflake IDGen Init Successfully");
+                }else {
+                    throw new InitException("Snowflake type not found");
+                }
                 if (idGen.init()) {
                     log.info("Snowflake Service Init Successfully");
                 } else {
@@ -70,5 +80,9 @@ public class SnowflakeService {
 
     public Result getId(String key) {
         return idGen.get(key);
+    }
+
+    public Result getId(){
+        return idGen.get();
     }
 }

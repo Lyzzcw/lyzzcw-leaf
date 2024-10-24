@@ -24,6 +24,7 @@ public class LeafController {
         return get(key, snowflakeService.getId(key));
     }
 
+
     private String get(@PathVariable("key") String key, Result id) {
         Result result;
         if (key == null || key.isEmpty()) {
@@ -35,4 +36,15 @@ public class LeafController {
         }
         return String.valueOf(result.getId());
     }
+
+    @RequestMapping(value = "/api/snowflake/get")
+    public String getSnowflakeId() {
+        Result result = snowflakeService.getId();
+        if (result.getStatus().equals(Status.EXCEPTION)) {
+            throw new LeafServerException(result.toString());
+        }
+        return String.valueOf(result.getId());
+    }
+
+
 }

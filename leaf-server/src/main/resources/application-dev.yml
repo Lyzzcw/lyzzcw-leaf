@@ -19,3 +19,6 @@ distribute:
     arrange: single
     lock: redisson
     semaphore: redisson
+snowflake:
+  #customize or general(default is general)
+  type: customize
