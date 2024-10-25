@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * id工具
+ *
+ * @author lzy
+ * @date 2024/10/25
+ */
 @Controller
 @Slf4j
 public class LeafMonitorController {
@@ -24,17 +30,24 @@ public class LeafMonitorController {
     @Autowired
     private Environment env;
 
+
     /**
-     * the output is like this:
-     * {
-     *   "timestamp": "1567733700834(2019-09-06 09:35:00.834)",
-     *   "sequenceId": "3448",
-     *   "workerId": "39"
-     * }
+     * 解码通用 ID
+     *
+     * @param snowflakeIdStr Snowflake ID str
+     * @return {@link Map}<{@link String}, {@link String}>
      */
     @RequestMapping(value = "decodeGeneralId")
     @ResponseBody
     public Map<String, String> decodeGeneralId(@RequestParam("snowflakeId") String snowflakeIdStr) {
+        /**
+         * the output is like this:
+         * {
+         *   "timestamp": "1567733700834(2019-09-06 09:35:00.834)",
+         *   "sequenceId": "3448",
+         *   "workerId": "39"
+         * }
+         */
         Map<String, String> map = new HashMap<>();
         try {
             long snowflakeId = Long.parseLong(snowflakeIdStr);
@@ -71,18 +84,25 @@ public class LeafMonitorController {
     private final long serviceIdMask = -1L ^ (-1L << serviceIdBits); // 用于提取5位serviceId
     private final long sequenceMask = -1L ^ (-1L << sequenceBits); // 用于提取7位sequence
 
+
     /**
-     * the output is like this:
-     * {
-     *   "timestamp": "1567733700834(2019-09-06 09:35:00.834)",
-     *   "sequenceId": "3448",
-     *   "workerId": "39",
-     *   "serviceId": "20"
-     * }
+     * 解码自定义 ID
+     *
+     * @param snowflakeIdStr Snowflake ID str
+     * @return {@link Map}<{@link String}, {@link String}>
      */
     @RequestMapping(value = "decodeCustomizeId")
     @ResponseBody
     public Map<String, String> decodeCustomizeId(@RequestParam("snowflakeId") String snowflakeIdStr) {
+        /**
+         * the output is like this:
+         * {
+         *   "timestamp": "1567733700834(2019-09-06 09:35:00.834)",
+         *   "sequenceId": "3448",
+         *   "workerId": "39",
+         *   "serviceId": "20"
+         * }
+         */
         Map<String, String> map = new HashMap<>();
         try {
             long snowflakeId = Long.parseLong(snowflakeIdStr);
@@ -107,6 +127,12 @@ public class LeafMonitorController {
     }
 
 
+    /**
+     * 获取 worker status
+     *
+     * @return {@link Map}<{@link String}, {@link String}>
+     * @throws NacosException Nacos 例外
+     */
     @GetMapping(value = "getWorkerStatus")
     @ResponseBody
     public Map<String, String> getWorkerStatus() throws NacosException {

@@ -1,7 +1,7 @@
 package lyzzcw.work.leaf.core;
 
 
-import lyzzcw.work.leaf.core.common.Result;
+import lyzzcw.work.component.domain.common.entity.Result;
 
 public interface IDGen {
     Result get();

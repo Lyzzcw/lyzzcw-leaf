@@ -3,9 +3,10 @@ package lyzzcw.work.leaf.core.snowflake;
 
 import com.alibaba.nacos.shaded.com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
+import lyzzcw.work.component.domain.common.entity.Result;
 import lyzzcw.work.leaf.core.IDGen;
-import lyzzcw.work.leaf.core.common.Result;
 import lyzzcw.work.leaf.core.common.Status;
+import lyzzcw.work.leaf.core.exception.LeafException;
 
 import java.util.Random;
 
@@ -57,7 +58,7 @@ public class LocalSnowflakeIDGenImpl implements IDGen {
     @Override
     public Result get(String key) {
         log.error("general snowflake idgen not support get serverId");
-        return new Result(-4, Status.EXCEPTION);
+        throw new LeafException(Status.ERR_1002);
     }
 
     @Override
@@ -73,15 +74,15 @@ public class LocalSnowflakeIDGenImpl implements IDGen {
                     timestamp = timeGen();
                     if (timestamp < lastTimestamp) {
                         //还是小于,自动摘除本身节点并报警
-                        return new Result(-1, Status.EXCEPTION);
+                        throw new LeafException(Status.ERR_1001);
                     }
                 } catch (InterruptedException e) {
                     log.error("wait interrupted");
-                    return new Result(-2, Status.EXCEPTION);
+                    throw new LeafException(Status.ERR_1001);
                 }
             } else {
                 //自动摘除本身节点并报警
-                return new Result(-3, Status.EXCEPTION);
+                throw new LeafException(Status.ERR_1001);
             }
         }
         if (lastTimestamp == timestamp) {
@@ -97,7 +98,7 @@ public class LocalSnowflakeIDGenImpl implements IDGen {
         }
         lastTimestamp = timestamp;
         long id = ((timestamp - twepoch) << timestampLeftShift) | (workerId << workerIdShift) | sequence;
-        return new Result(id, Status.SUCCESS);
+        return Result.ok(id);
 
     }
 

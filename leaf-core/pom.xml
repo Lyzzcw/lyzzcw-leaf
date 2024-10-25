@@ -21,6 +21,10 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>lyzzcw.work.component</groupId>
+            <artifactId>common-parents</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
