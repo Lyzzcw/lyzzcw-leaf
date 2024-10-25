@@ -2,8 +2,6 @@ package lyzzcw.work.leaf.server.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
-import lyzzcw.work.component.domain.common.entity.Result;
-import lyzzcw.work.leaf.core.exception.LeafException;
 import lyzzcw.work.leaf.server.service.SnowflakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,16 +29,9 @@ public class LeafController {
      */
     @RequestMapping(value = "/api/snowflake/get/{key}")
     public String getSnowflakeId(@PathVariable("key") String key) {
-        return get(key, snowflakeService.getId(key));
+        return String.valueOf(snowflakeService.getId(key));
     }
 
-
-    private String get(@PathVariable("key") String key, Result id) {
-        if (key == null || key.isEmpty()) {
-            throw new LeafException("no key init");
-        }
-        return String.valueOf(id.getData());
-    }
 
     /**
      * 获取 Snowflake ID

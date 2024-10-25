@@ -1,11 +1,10 @@
 package lyzzcw.work.leaf.server.service;
 
 import lombok.extern.slf4j.Slf4j;
-import lyzzcw.work.component.domain.common.entity.Result;
+import lyzzcw.work.component.domain.common.exception.BaseException;
 import lyzzcw.work.component.redis.semaphore.DistributedSemaphore;
 import lyzzcw.work.component.redis.semaphore.factory.DistributedSemaphoreFactory;
 import lyzzcw.work.leaf.core.IDGen;
-import lyzzcw.work.leaf.core.exception.LeafException;
 import lyzzcw.work.leaf.core.snowflake.CustomizeSnowflakeIDGenImpl;
 import lyzzcw.work.leaf.core.snowflake.GeneralSnowflakeIDGenImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class SnowflakeService {
     private final DistributedSemaphoreFactory distributedSemaphoreFactory;
 
     @Autowired
-    public SnowflakeService(Environment environment, DistributedSemaphoreFactory distributedSemaphoreFactory) throws LeafException {
+    public SnowflakeService(Environment environment, DistributedSemaphoreFactory distributedSemaphoreFactory){
         //redission 分布式锁 确认注册的顺序性
         this.environment = environment;
         this.distributedSemaphoreFactory = distributedSemaphoreFactory;
@@ -55,21 +54,21 @@ public class SnowflakeService {
                     idGen = new CustomizeSnowflakeIDGenImpl(nacosAddr,username,password,serverName,groupName, serverPort);
                     log.info("Customize Snowflake IDGen Init Successfully");
                 }else {
-                    throw new LeafException("Snowflake type not found");
+                    throw new BaseException("Snowflake type not found");
                 }
                 if (idGen.init()) {
                     log.info("Snowflake Service Init Successfully");
                 } else {
-                    throw new LeafException("Snowflake type not found");
+                    throw new BaseException("Snowflake type not found");
                 }
             }else {
                 // 未获取到许可
                 log.info("No permits available");
-                throw new LeafException("Snowflake type not found");
+                throw new BaseException("Snowflake type not found");
             }
         }catch (Exception e){
             log.error("Snowflake Service Init Fail", e);
-            throw new LeafException("Snowflake type not found");
+            throw new BaseException("Snowflake type not found");
         }finally {
             if(StringUtils.hasLength(permitId)){
                 lock.release(permitId);
@@ -78,11 +77,11 @@ public class SnowflakeService {
 
     }
 
-    public Result getId(String key) {
+    public long getId(String key) {
         return idGen.get(key);
     }
 
-    public Result getId(){
+    public long getId(){
         return idGen.get();
     }
 }

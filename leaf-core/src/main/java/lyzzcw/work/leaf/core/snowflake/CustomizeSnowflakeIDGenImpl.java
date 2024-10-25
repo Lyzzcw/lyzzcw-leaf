@@ -4,10 +4,11 @@ package lyzzcw.work.leaf.core.snowflake;
 import com.alibaba.nacos.shaded.com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import lyzzcw.work.component.domain.common.entity.Result;
+import lyzzcw.work.component.domain.common.exception.BaseException;
 import lyzzcw.work.leaf.core.IDGen;
 import lyzzcw.work.leaf.core.common.Status;
 import lyzzcw.work.leaf.core.common.Utils;
-import lyzzcw.work.leaf.core.exception.LeafException;
+
 
 import java.util.Random;
 
@@ -79,13 +80,13 @@ public class CustomizeSnowflakeIDGenImpl implements IDGen {
     }
 
     @Override
-    public Result get() {
+    public long get() {
         log.error("customize snowflake id gen get method is not support");
-        throw new LeafException(Status.ERR_1002);
+        throw new BaseException(Status.ERR_1002);
     }
 
     @Override
-    public synchronized Result get(String serviceKey) {
+    public synchronized long get(String serviceKey) {
         long serviceId = Long.parseLong(serviceKey);
         Preconditions.checkArgument(serviceId >= 0 && serviceId <= maxServiceId, "serviceId must gte 0 and lte 31");
         long timestamp = timeGen();
@@ -100,16 +101,16 @@ public class CustomizeSnowflakeIDGenImpl implements IDGen {
                     if (timestamp < lastTimestamp) {
                         //还是小于,自动摘除本身节点并报警
                         holder.shutdown();
-                        throw new LeafException(Status.ERR_1001);
+                        throw new BaseException(Status.ERR_1001);
                     }
                 } catch (InterruptedException e) {
                     log.error("wait interrupted");
-                    throw new LeafException(Status.ERR_1001);
+                    throw new BaseException(Status.ERR_1001);
                 }
             } else {
                 //自动摘除本身节点并报警
                 holder.shutdown();
-                throw new LeafException(Status.ERR_1001);
+                throw new BaseException(Status.ERR_1001);
             }
         }
         if (lastTimestamp == timestamp) {
@@ -129,7 +130,7 @@ public class CustomizeSnowflakeIDGenImpl implements IDGen {
                 | (serviceId << serviceIdShift)
                 | (workerId << workerIdShift)
                 | sequence;
-        return Result.ok(id);
+        return id;
 
     }
 

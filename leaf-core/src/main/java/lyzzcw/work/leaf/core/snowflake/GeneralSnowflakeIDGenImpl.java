@@ -4,10 +4,10 @@ package lyzzcw.work.leaf.core.snowflake;
 import com.alibaba.nacos.shaded.com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import lyzzcw.work.component.domain.common.entity.Result;
+import lyzzcw.work.component.domain.common.exception.BaseException;
 import lyzzcw.work.leaf.core.IDGen;
 import lyzzcw.work.leaf.core.common.Status;
 import lyzzcw.work.leaf.core.common.Utils;
-import lyzzcw.work.leaf.core.exception.LeafException;
 
 import java.util.Random;
 
@@ -74,7 +74,7 @@ public class GeneralSnowflakeIDGenImpl implements IDGen {
     }
 
     @Override
-    public synchronized Result get() {
+    public synchronized long get() {
         long timestamp = timeGen();
         //发生了回拨，此刻时间小于上次发号时间
         if (timestamp < lastTimestamp) {
@@ -87,16 +87,16 @@ public class GeneralSnowflakeIDGenImpl implements IDGen {
                     if (timestamp < lastTimestamp) {
                         //还是小于,自动摘除本身节点并报警
                         holder.shutdown();
-                        throw new LeafException(Status.ERR_1001);
+                        throw new BaseException(Status.ERR_1001);
                     }
                 } catch (InterruptedException e) {
                     log.error("wait interrupted");
-                    throw new LeafException(Status.ERR_1001);
+                    throw new BaseException(Status.ERR_1001);
                 }
             } else {
                 //自动摘除本身节点并报警
                 holder.shutdown();
-                throw new LeafException(Status.ERR_1001);
+                throw new BaseException(Status.ERR_1001);
             }
         }
         if (lastTimestamp == timestamp) {
@@ -116,14 +116,14 @@ public class GeneralSnowflakeIDGenImpl implements IDGen {
         }
         lastTimestamp = timestamp;
         long id = ((timestamp - twepoch) << timestampLeftShift) | (workerId << workerIdShift) | sequence;
-        return Result.ok(id);
+        return id;
 
     }
 
     @Override
-    public Result get(String serverId) {
+    public long get(String serverId) {
         log.error("general snowflake idgen not support get serverId");
-        throw new LeafException(Status.ERR_1002);
+        throw new BaseException(Status.ERR_1002);
     }
 
     protected long tilNextMillis(long lastTimestamp) {
