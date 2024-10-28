@@ -1,7 +1,7 @@
 log:
   level: DEBUG
 server:
-  port: 8902
+  port: 8901
   servlet:
     context-path:
 spring:
