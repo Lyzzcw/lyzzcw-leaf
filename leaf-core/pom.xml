@@ -6,15 +6,12 @@
     <parent>
         <artifactId>leaf-parent</artifactId>
         <groupId>lyzzcw.work.leaf</groupId>
-        <version>1.0.1</version>
+        <version>${revison}</version>
     </parent>
     <groupId>lyzzcw.work.leaf</groupId>
     <artifactId>leaf-core</artifactId>
-
     <packaging>jar</packaging>
-    <version>1.0.1</version>
     <name>leaf-core</name>
-
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -24,7 +21,7 @@
         <dependency>
             <groupId>lyzzcw.work.component</groupId>
             <artifactId>common-parents</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

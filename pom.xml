@@ -5,7 +5,7 @@
     <groupId>lyzzcw.work.leaf</groupId>
     <artifactId>leaf-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>${revison}</version>
     <name>Leaf</name>
     <modules>
         <module>leaf-core</module>
@@ -13,13 +13,14 @@
     </modules>
     <description>Distributed ID Generate Service</description>
     <properties>
+        <revison>1.0.2</revison>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-
         <spring.boot.version>2.4.2</spring.boot.version>
         <spring.cloud.alibaba.version>2021.1</spring.cloud.alibaba.version>
         <spring.cloud.version>2020.0.1</spring.cloud.version>
@@ -169,6 +170,34 @@
             </plugins>
         </pluginManagement>
 
+        <plugins>
+            <!-- 使用revison全局变量时生成完成子pom-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <distributionManagement>
