@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
  * Date: 2024/11/20 15:15
  * Description: No Description
  */
-@FeignClient(value = "leaf",path = "/api/snowflake")
+@FeignClient(value = "leaf",path = "/api/snowflake"
+//        ,fallback = LeafFallBackService.class
+)
 public interface LeafFeign {
     /**
      * 获取 Snowflake ID(serverId)

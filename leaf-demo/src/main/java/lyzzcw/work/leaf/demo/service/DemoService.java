@@ -21,6 +21,9 @@ public class DemoService {
 
     public String getId(){
         try {
+            /**
+             * 调用方这里可以选择 重试|本地core生成id|抛异常
+             */
             return leafFeign.getSnowflakeId();
         }catch (Exception e) {
             return String.valueOf(idGen.get());
