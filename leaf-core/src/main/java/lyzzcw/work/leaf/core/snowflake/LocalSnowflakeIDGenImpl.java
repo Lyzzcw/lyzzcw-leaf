@@ -13,6 +13,7 @@ import java.util.Random;
 /**
  * 本地 Snowflake idgen impl
  * 本地引用core依赖.通过启动参数配置workerId,1000-1023 防止leaf集群不可用
+ * 启动参数增加 -DworkerId=1001
  * @author lzy
  * @date 2024/10/23
  */
@@ -53,6 +54,7 @@ public class LocalSnowflakeIDGenImpl implements IDGen {
         //java -DworkerId=1001 Main
         workerId = Long.parseLong(System.getProperty("workerId"));
         Preconditions.checkArgument(workerId >= 0 && workerId <= maxWorkerId, "workerID must gte 0 and lte 1023");
+        log.info("local general snowflake idgen init success workerId:{}", workerId);
     }
 
     @Override

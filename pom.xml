@@ -10,10 +10,12 @@
     <modules>
         <module>leaf-core</module>
         <module>leaf-server</module>
+        <module>leaf-client</module>
+        <module>leaf-demo</module>
     </modules>
     <description>Distributed ID Generate Service</description>
     <properties>
-        <revison>1.0.2</revison>
+        <revison>1.0.3-SNAPSHOT</revison>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

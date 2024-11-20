@@ -4,6 +4,7 @@ package lyzzcw.work.leaf.server.controller;
 import lombok.extern.slf4j.Slf4j;
 import lyzzcw.work.leaf.server.service.SnowflakeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,7 @@ public class LeafController {
      * @param key 钥匙
      * @return {@link String}
      */
-    @RequestMapping(value = "/api/snowflake/get/{key}")
+    @GetMapping(value = "/api/snowflake/get/{key}")
     public String getSnowflakeId(@PathVariable("key") String key) {
         return String.valueOf(snowflakeService.getId(key));
     }
@@ -38,7 +39,7 @@ public class LeafController {
      *
      * @return {@link String}
      */
-    @RequestMapping(value = "/api/snowflake/get")
+    @GetMapping(value = "/api/snowflake/get")
     public String getSnowflakeId() {
         return String.valueOf(snowflakeService.getId());
     }
